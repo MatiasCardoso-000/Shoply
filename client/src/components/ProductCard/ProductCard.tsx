@@ -5,21 +5,7 @@ import Button from "../Button/Button";
 const ProductCard = (product:Product) => {
 
   const {addToCart} = useCart()
-  // const handlePay = async (product: Product) => {
-  //   const res = await fetch("http://localhost:3000/api/checkout", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       id:product.id,
-  //       title: product.title,
-  //       price: Number(product.price),
-  //       imageUrl: product.imageUrl
-  //     }),
-  //     headers: { "Content-type": "application/json" },
-  //   });
-  //   const session = await res.json();
-
-  //   window.location = session.url;
-  // };
+ 
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col justify-between">
