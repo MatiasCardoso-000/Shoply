@@ -47,7 +47,7 @@ export const Cart = () => {
                 className="flex gap-4 border-b border-gray-200 pb-4"
               >
                 <img
-                  src={item.imageUrl}
+                  src={item.image}
                   alt={item.title}
                   className="w-24 h-24 object-cover"
                 />

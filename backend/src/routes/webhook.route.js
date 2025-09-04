@@ -40,54 +40,51 @@ router.post(
       case "checkout.session.completed":
         const session = event.data.object;
 
-        const metadata = session.metadata;
+        const metadata = JSON.parse(session.metadata.product_info);
 
-        console.log(metadata);
+        let productListHtml = "";
+        metadata.forEach((p) => {
+          productListHtml += `
+          <div>
+            <img src="${`${p.image}`}" alt="${
+            p.title
+          }" style="max-width: 100px; height: auto" />
+            <h3>${p.title}</h3>
+            <p>Precio: $${p.price.toFixed(2)}</p>
+            <p>Cantidad: ${p.quantity}</p>
+          </div>`;
+        });
 
-        // console.log(
-        //   "Consultando producto con id: ",
-        //   checkOutSessionCompleted.metadata.productId
-        // );
-
-        // if (event.type === "checkout.session.completed") {
-        //   // Extrae la información necesaria
-        //   const customerEmail = session.customer_details.email;
-        //   const orderId = session.id;
-        //   const product_name = checkOutSessionCompleted.metadata.product_name;
-        //   const product_image = checkOutSessionCompleted.metadata.product_image;
-        //   const product_price = checkOutSessionCompleted.metadata.product_price;
-        //   // Configura el correo
-        //   const mailOptions = {
-        //     from: process.env.NODEMAILER_USER,
-        //     to: customerEmail,
-        //     subject: `Confirmación de tu compra #${product_name}`,
-        //     html: `
-        //   <h1>¡Gracias por tu compra!</h1>
-        //   <p>Tu pedido con ID # <strong>${orderId} </strong> se ha procesado con éxito. </p>
-        //   <img src="${product_image}" alt="${product_name}" style="max-width: 200px; height: auto;"/>
-        //   <p >Total: <span style="font-size: 20px; font-weight:bold"> $${product_price} </span></p>
-        //   <p>El producto <strong> ${product_name}</strong>  lo enviaremos pronto.
-        //   <p>Saludos,</p>
-        //   <p>El equipo de la tienda</p>
-        // `,
-        //   };
-
-        //   // Envía el correo
-        //   // transporter.sendMail(mailOptions, (error, info) => {
-        //   //   if (error) {
-        //   //     console.log("Error al enviar el correo:", error);
-        //   //   } else {
-        //   //     console.log("Correo enviado:", info.response);
-        //   //   }
-        //   // });
-        // }
-
+        if (event.type === "checkout.session.completed") {
+          // Extrae la información necesaria
+          const customerEmail = session.customer_details.email;
+          const orderId = session.id;
+          // Configura el correo
+          const mailOptions = {
+            from: process.env.NODEMAILER_USER,
+            to: customerEmail,
+            subject: `Confirmación de tu compra #${orderId}`,
+            html: `
+          <h1>¡Gracias por tu compra!</h1>
+          <p>Tu pedido con ID #${session.id} se ha procesado con éxito. Aquí está el resumen:</p>
+          ${productListHtml}  <p>Saludos,</p>
+          <p>El equipo de la tienda</p>
+        `,
+          };
+          // Envía el correo
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.log("Error al enviar el correo:", error);
+            } else {
+              console.log("Correo enviado:", info.response);
+            }
+          });
+        }
+        res.status(200).json({ received: true });
         break;
 
       default:
         console.log("Evento no manejado: ", event.type);
     }
-
-    return res.status(200);
   }
 );

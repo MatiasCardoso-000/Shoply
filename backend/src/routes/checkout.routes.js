@@ -9,13 +9,15 @@ router.post("/", async (req, res) => {
   const cart = req.body;
 
   const productData = Array.isArray(cart)
-    ? cart.map((p) => ({
-        name: p.title,
-        image: p.imageUrl,
-        price: p.price,
-        quantity: p.quantity,
-        id: p.id,
-      }))
+    ? cart.map((p) => {
+        return {
+          title: p.title,
+          image: `${p.image}`,
+          id: p.id,
+          price: p.price * 100,
+          quantity: p.quantity
+        };
+      })
     : [];
 
   const session = await stripe.checkout.sessions.create({
@@ -25,8 +27,8 @@ router.post("/", async (req, res) => {
         price_data: {
           currency: "usd",
           product_data: {
-            name: p.name,
-            images: [`https://9js0wz42-5173.brs.devtunnels.ms/${p.image}`],
+            name: p.title,
+            images: [`${p.image}`],
           },
           unit_amount: p.price,
         },
@@ -34,14 +36,8 @@ router.post("/", async (req, res) => {
         quantity: p.quantity,
       };
     }),
-    metadata: productData.map(({ name, id, price,image }) =>
-      JSON.stringify({
-        name,
-        product_image: `https://9js0wz42-5173.brs.devtunnels.ms/${image}`,
-        id,
-        price,
-      })
-    ),
+    metadata: { product_info: JSON.stringify(productData) },
+
     mode: "payment",
   });
 

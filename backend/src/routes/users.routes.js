@@ -2,17 +2,21 @@ import express from "express";
 
 import { validateToken } from "../middleware/validateToken.js";
 import { UserControllers } from "../controllers/user.controllers/user.controllers.js";
+import { validateZodSchema } from "../middleware/validateSchema.js";
+import { loginSchema, registerSchema } from "../schemas/authSchemas.js";
 
 export const router = express.Router();
 
-router.post("/register", UserControllers.register);
+router.post("/register", validateZodSchema(registerSchema), UserControllers.register);
 
-router.post("/login",  UserControllers.login);
+router.post("/login", validateZodSchema(loginSchema),UserControllers.login);
 
-router.put("/", validateToken,UserControllers.updateUser);
+router.post("/logout",  UserControllers.logout);
 
-router.delete("/",UserControllers.deleteUser );
+router.put("/", validateToken, UserControllers.updateUser);
+
+router.delete("/", UserControllers.deleteUser);
 
 router.get("/user/:id", UserControllers.getUser);
 
-router.post("/refresh-token", (req, res) => {});
+router.post("/refresh-token", validateToken, UserControllers.refreshToken);

@@ -10,7 +10,7 @@ const ProductCard = (product:Product) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col justify-between">
       <img
-        src={product.imageUrl}
+        src={product.image}
         alt={product.title}
         className="w-full h-64 object-cover"
       />
@@ -19,7 +19,7 @@ const ProductCard = (product:Product) => {
           {product.title}
         </h3>
         <p className="text-gray-600 font-bold mb-4">
-          ${product.price / 100}
+          ${product.price}
         </p>
         <Button onClick={()=>addToCart(product)}>Add to Cart</Button>
       </div>

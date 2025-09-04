@@ -1,23 +1,28 @@
 import { sequelize } from "../database/dabatabase.js";
 import { DataTypes } from "sequelize";
 
-export const User = sequelize.define("user", {
+export const Product = sequelize.define("product", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  username: {
+  image: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  email: {
+  title: {
     type: DataTypes.STRING,
-    unique: true,
     allowNull: false
   },
-  password: {
-    type: DataTypes.STRING,
+  price: {
+    type: DataTypes.FLOAT,
     allowNull: false
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 });
+
+
