@@ -3,7 +3,6 @@ import type { Product } from "../../types/products.types";
 
 export const Cart = () => {
   const { cart, addToCart, removeFromCart, clearCart } = useCart();
-
   const handleAddToCart = (product: Product) => {
     addToCart(product);
   };
@@ -30,8 +29,6 @@ export const Cart = () => {
 
     window.location = session.url;
   };
-
-
 
   return (
     <div className="w-4/5 mx-auto my-8 border border-gray-300 p-4">

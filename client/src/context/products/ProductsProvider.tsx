@@ -11,11 +11,12 @@ export const ProductsProvider: React.FC<ProductsProviderProps> = ({
 }) => {
 
   const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
   const getProducts = async () => {
     const productsData = await getProductsRequest();
+    console.log(productsData);
     
     setProducts(productsData);
   };
