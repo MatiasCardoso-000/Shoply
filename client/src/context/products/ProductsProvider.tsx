@@ -16,8 +16,6 @@ export const ProductsProvider: React.FC<ProductsProviderProps> = ({
 
   const getProducts = async () => {
     const productsData = await getProductsRequest();
-    console.log(productsData);
-    
     setProducts(productsData);
   };
 

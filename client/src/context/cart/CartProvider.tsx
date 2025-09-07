@@ -1,7 +1,10 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CartContext, type CartItem } from "./CartContext";
 import type { Product } from "../../types/products.types";
-
+import {
+  addProductToCartRequest,
+  getCartRequest,
+} from "../../../api/cart/cart";
 interface CartProviderProps {
   children: React.ReactNode;
 }
@@ -9,7 +12,14 @@ interface CartProviderProps {
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const addToCart = (product: Product) => {
+  const getCart = async () => {
+    const res = await getCartRequest();
+    const cartData = await res.json();
+    setCart(cartData)
+    console.log(cartData);
+  };
+
+  const addToCart = async (product: Product) => {
     const productInCartIndex = cart.findIndex((p) => p.id === product.id);
 
     if (productInCartIndex >= 0) {
@@ -18,6 +28,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       setCart(newCart);
     } else {
       setCart([...cart, { ...product, quantity: 1 }]);
+
+      await addProductToCartRequest(cart);
     }
   };
 
@@ -38,6 +50,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const clearCart = () => {
     setCart([]);
   };
+
+  useEffect(() => {
+    // getCart();
+  }, []);
+
 
   return (
     <CartContext.Provider

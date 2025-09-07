@@ -28,9 +28,9 @@ export const apiFetch = async (url:string, options:RequestInit = {}) => {
   let accessToken = localStorage.getItem("accessToken");
 
   //cabeceras por defecto
-  const headers = {
+  const headers: Record<string,string> = {
     "Content-type": "application/json",
-    ...options.headers,
+    ...options.headers as Record<string,string>,
   };
 
   if (accessToken) {

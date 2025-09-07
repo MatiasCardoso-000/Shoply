@@ -1,12 +1,14 @@
+import { BASE_URL } from "./api";
+
 export const registerRequest = async (user: any) => {
-    const response = await fetch('/api/auth/register', {
+   return await fetch(`${BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
     });
-    return response.json();
+
 };
 
 export const loginRequest = async (user: any) => {
