@@ -11,7 +11,7 @@ const register = async (req, res) => {
     const userExists = await User.findOne({ where: { email } });
 
     if (userExists) {
-      return res.status(409).json({ message: "Email is already in use" });
+      return res.status(409).json({ message: ["Email is already in use"] });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -43,7 +43,7 @@ const register = async (req, res) => {
 
     return res
       .status(500)
-      .json({ message: "Server error while creating user" });
+      .json({ message: ["Server error while creating user"] });
   }
 };
 
@@ -53,25 +53,30 @@ const login = async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: ["Invalid credentials"] });
     }
 
     const matchPassword = await bcrypt.compare(password, user.password);
 
     if (!matchPassword) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: ["Invalid credentials"] });
     }
 
     const { refreshToken, accessToken } = generateTokens({ id: user.id });
 
-    res.cookie("refreshToken", refreshToken);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.json({
       accessToken: accessToken,
     });
   } catch (err) {
     console.error(err.message);
-    return res.status(500).json("Error en el servidor");
+    return res.status(500).json({ message: ["Error en el servidor"] });
   }
 };
 
@@ -127,7 +132,7 @@ const getUser = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    res.json(user);
+    res.json({ user });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -176,7 +181,7 @@ const refreshToken = async (req, res) => {
     }
     //Comprabamos que exista la clave secreta del refreshToken
     if (!process.env.REFRESH_TOKEN_SECRET) {
-      throw new Error("Secret key is not defined");
+      throw new Error("Secret key not defined");
     }
 
     //VERIFICAMOS  REFRESH_TOKEN_SECRET

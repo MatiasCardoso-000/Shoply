@@ -5,6 +5,7 @@ interface AuthContextType {
     user: User;
     isAuthenticated: boolean;
     loading: boolean;
+    errors:string[];
     signup: (user: User) => Promise<void>;
     signin: (user: User) => Promise<void>;
     logout: () => Promise<void>;

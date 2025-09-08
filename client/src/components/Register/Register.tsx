@@ -1,6 +1,7 @@
 import { useAuth } from "../../hooks/useAuth";
 import type { User } from "../../types/user.types";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const { register, handleSubmit, formState } = useForm<User>();
@@ -65,12 +66,12 @@ const Register = () => {
               {...register("password", { required: true })}
             />
           </div>
-           <div>
+          <div>
             <label
               htmlFor="password"
               className="text-sm font-medium text-gray-700"
             >
-             Confirm Password
+              Confirm Password
             </label>
             <input
               id="confirmPassword"
@@ -89,7 +90,25 @@ const Register = () => {
               Sign up
             </button>
           </div>
+          {formState.errors && (
+            <div>
+              {Object.values(formState.errors).map((error, index) => (
+                <p key={index} className="text-red-500 text-sm">
+                  {error.message}
+                </p>
+              ))}
+            </div>
+          )}
         </form>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );

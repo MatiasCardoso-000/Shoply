@@ -1,39 +1,69 @@
-import React from 'react';
+import { useForm } from "react-hook-form";
+import type { User } from "../../types/user.types";
+import { useAuth } from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BsEye } from "react-icons/bs";
 
-const Login: React.FC = () => {
+const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<User>();
+  const { signin, isAuthenticated, errors: LoginErrors } = useAuth();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: User) => {
+    signin(data);
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-900">Login</h2>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
               id="email"
-              name="email"
               type="email"
               autoComplete="email"
               required
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              {...register("email", { required: true })}
             />
           </div>
-          <div>
+          <div className="w-full flex items-center shadow-sm ">
             <label
               htmlFor="password"
               className="text-sm font-medium text-gray-700"
             >
               Password
             </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+            <div className="w-full">
+              <input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="w-full px-3 py-2 mt-1  rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                {...register("password", { required: true })}
+              />
+            </div>
+            <BsEye  />
           </div>
           <div>
             <button
@@ -44,7 +74,23 @@ const Login: React.FC = () => {
             </button>
           </div>
         </form>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
+      {LoginErrors.length > 0 && (
+        <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+          {LoginErrors.map((error: string, i: number) => (
+            <p key={i}>{error}</p>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

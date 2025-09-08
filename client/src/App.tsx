@@ -1,15 +1,14 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header/Header";
 import ProductsList from "./components/ProductsList/ProductsList";
 import Footer from "./components/Footer/Footer";
-import Shop from "./components/Shop/Shop";
 import About from "./components/About/About";
 import Contact from "./components/Contact/Contact";
 import Success from "./components/Success/Success";
 import { Cart } from "./components/Cart/Cart";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+import { PrivateRoutes } from "./PrivateRoutes/PrivateRoutes";
 
 function App() {
   return (
@@ -18,12 +17,14 @@ function App() {
         <Header />
         <main className="flex-grow">
           <Routes>
+            <Route element={<PrivateRoutes toRedirect={"/login"} />}>
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/success" element={<Success />} />
+              <Route path="/cart" element={<Cart />} />
+            </Route>
+
             <Route path="/" element={<ProductsList />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/success" element={<Success />} />
-            <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>

@@ -25,7 +25,7 @@ const refreshToken = async () => {
 };
 
 export const apiFetch = async (url:string, options:RequestInit = {}) => {
-  let accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
 
   //cabeceras por defecto
   const headers: Record<string,string> = {
