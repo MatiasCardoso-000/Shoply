@@ -34,10 +34,10 @@ export const loginRequest = async (user: User) => {
 };
 
 export const logoutRequest = async () => {
-  const response = await fetch("/api/auth/logout", {
+  return await apiFetch(`/auth/logout`, {
     method: "POST",
+    credentials:"include"
   });
-  return response.json();
 };
 
 export const verifyTokenRequest = async () => {

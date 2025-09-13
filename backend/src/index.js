@@ -31,8 +31,8 @@ app.use("/api/products", ProductsRouter);
 app.use("/api/cart", CartRouter);
 app.use("/api/checkout", CheckOutRouter);
 
-User.belongsToMany(Product, { through: CartItems, foreignKey: "userId" });
-Product.belongsToMany(User, { through: CartItems, foreignKey: "productId" });
+User.belongsToMany(Product, { through: CartItems, foreignKey: "user_id" });
+Product.belongsToMany(User, { through: CartItems, foreignKey: "product_id" });
 
 export async function testConnection() {
   try {

@@ -9,6 +9,7 @@ import { Cart } from "./components/Cart/Cart";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import { PrivateRoutes } from "./PrivateRoutes/PrivateRoutes";
+import ProductDescription from "./components/ProductDescription/ProductDescription";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<ProductsList />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/product/:product_name" element={<ProductDescription />} />
           </Routes>
         </main>
         <Footer />

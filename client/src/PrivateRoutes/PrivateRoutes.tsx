@@ -8,8 +8,8 @@ interface PrivateRoutesProps {
 export const PrivateRoutes = ({  toRedirect }: PrivateRoutesProps) => {
   const { isAuthenticated, loading } = useAuth();
 
-  if (loading) return <h1>Loading...</h1>;
+  if (loading) return <h1 className="text-2xl">Loading...</h1>;
 
-  if (!isAuthenticated) return <Navigate to={toRedirect}/>;
+  if (!isAuthenticated && !loading) return <Navigate to={toRedirect} replace/>;
   return <Outlet />;
 };

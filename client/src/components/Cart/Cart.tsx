@@ -40,7 +40,7 @@ export const Cart = () => {
           <div className="flex flex-col gap-4">
             {cart.map((item) => (
               <div
-                key={item.id}
+                key={item.product_id}
                 className="flex gap-4 border-b border-gray-200 pb-4"
               >
                 <img
@@ -53,7 +53,7 @@ export const Cart = () => {
                   <p>Price: ${item.price}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <button
-                      onClick={() => handleRemoveFromCart(item.id)}
+                      onClick={() => handleRemoveFromCart(item.product_id)}
                       className="bg-gray-200 border border-gray-300 px-2 py-1 cursor-pointer"
                     >
                       -

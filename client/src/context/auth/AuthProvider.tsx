@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const res = await loginRequest(user);
       const userData = await res?.json();
-      console.log(userData);
+      
 
       if (!res?.ok) {
         let errorMessages;
@@ -66,8 +66,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      setIsAuthenticated(true);
       setLoading(false);
+      setIsAuthenticated(true);
       setUser(userData.userLogged);
 
       localStorage.setItem("sessionActive", "true");
@@ -79,9 +79,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await logoutRequest();
       setUser({} as User);
       setIsAuthenticated(false);
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("sessionActive")
+      await logoutRequest();
     } catch (error) {
       console.error(error);
     }

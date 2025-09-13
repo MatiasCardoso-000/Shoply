@@ -2,7 +2,7 @@ import { sequelize } from "../database/dabatabase.js";
 import { DataTypes } from "sequelize";
 
 export const Product = sequelize.define("product", {
-  id: {
+  product_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true

@@ -9,7 +9,7 @@ export const getProductsRequest = async (): Promise<Product[]> => {
   return response.json();
 };
 
-export const getProduct = async (id: number): Promise<Product> => {
+export const getProductRequest = async (id: string): Promise<Product> => {
   const response = await apiFetch(`/products/${id}`);
   return response.json();
 };

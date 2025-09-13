@@ -11,7 +11,7 @@ router.post("/register", validateZodSchema(registerSchema), UserControllers.regi
 
 router.post("/login", validateZodSchema(loginSchema),UserControllers.login);
 
-router.post("/logout",  UserControllers.logout);
+router.post("/logout",UserControllers.logout);
 
 router.put("/", validateToken, UserControllers.updateUser);
 

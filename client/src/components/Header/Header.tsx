@@ -1,16 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated,loading, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
   };
+
+  useEffect(() => {
+    if (!isAuthenticated && !loading) {
+      navigate("/login");
+    }
+  }, [isAuthenticated , navigate,loading]);
 
   return (
     <header className="bg-white shadow-md">
