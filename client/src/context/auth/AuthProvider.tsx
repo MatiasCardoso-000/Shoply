@@ -17,9 +17,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signup = async (user: User) => {
     try {
       const res = await registerRequest(user);
-      const userData = await res.json();
+      const userData = await res?.json();
 
-      if (!res.ok) {
+      if (!res?.ok) {
         let errorMessages;
 
         if (userData.errors) {
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      localStorage.setItem("session_active", "true");
+      localStorage.setItem("sessionActive", "true");
       localStorage.setItem("accessToken", userData.accessToken);
       setUser(userData.registerUser);
       setIsAuthenticated(true);
@@ -47,9 +47,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signin = async (user: User) => {
     try {
       const res = await loginRequest(user);
-      const userData = await res.json();
+      const userData = await res?.json();
+      console.log(userData);
 
-      if (!res.ok) {
+      if (!res?.ok) {
         let errorMessages;
 
         if (userData.errors) {
@@ -65,8 +66,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      setUser(userData);
       setIsAuthenticated(true);
+      setLoading(false);
+      setUser(userData.userLogged);
 
       localStorage.setItem("sessionActive", "true");
       localStorage.setItem("accessToken", userData.accessToken);
@@ -99,29 +101,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       try {
         const res = await verifyTokenRequest();
-        if (!res.ok) {
+        if (!res?.ok) {
           setLoading(false);
           setIsAuthenticated(false);
           setUser({} as User);
           return;
         }
-        const data = await res.json();
 
-        setUser(data);
+        const data = await res.json();
+        setUser(data.userUpdated);
         setIsAuthenticated(true);
         localStorage.setItem("accessToken", data.accessToken);
       } catch (error) {
         console.log(error);
-        setUser({} as User);
         setIsAuthenticated(false);
+        setUser({} as User);
       } finally {
         setLoading(false);
       }
     };
 
     checkLoginStatus();
-    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setErrors([]);
+    }, 4000);
+    return () => clearInterval(timer);
+  });
 
   return (
     <AuthContext.Provider

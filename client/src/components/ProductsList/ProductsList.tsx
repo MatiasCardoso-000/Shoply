@@ -3,7 +3,7 @@ import { useProducts } from "../../hooks/useProducts";
 import ProductFilters from "../ProductFilters/ProductFilters";
 import { useState } from "react";
 
-const ProductsList: React.FC = () => {
+const ProductsList = () => {
   const [maxPrice, setMaxPrice] = useState(0);
   const { products } = useProducts();
 
@@ -12,14 +12,9 @@ const ProductsList: React.FC = () => {
   };
 
   const filteredProducts = products.filter((p) => {
-    if (p.price <= maxPrice){
-      return p
-    }else {
-      return products
-    }
-  }
- 
-);
+    if (maxPrice === 0) return true; // If maxPrice is 0, show all products
+    return p.price <= maxPrice;
+  });
 
   return (
     <div className="container mx-auto px-4 py-8 flex gap-4">

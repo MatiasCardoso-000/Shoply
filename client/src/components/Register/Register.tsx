@@ -1,18 +1,38 @@
+import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import type { User } from "../../types/user.types";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const Register = () => {
-  const { register, handleSubmit, formState } = useForm<User>();
-  const { signup } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<User>();
+  const {
+    signup,
+    errors : RegisterErrors ,
+  } = useAuth();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const onSubmit = async (data: User) => {
     signup(data);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-gray-900">
           Register
@@ -29,10 +49,12 @@ const Register = () => {
               id="username"
               type="text"
               autoComplete="username"
-              required
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               {...register("username", { required: true })}
             />
+            {errors.username && (
+              <p className="text-red-500 text-xs mt-1">Username is required</p>
+            )}
           </div>
           <div>
             <label
@@ -45,42 +67,80 @@ const Register = () => {
               id="email"
               type="email"
               autoComplete="email"
-              required
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               {...register("email", { required: true })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">Email is required</p>
+            )}
           </div>
-          <div>
+          <div className="w-full ">
             <label
               htmlFor="password"
               className="text-sm font-medium text-gray-700"
             >
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              {...register("password", { required: true })}
-            />
+            <div className="w-full flex items-center border border-gray-300 rounded-md shadow-sm ">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                className="w-full px-3 py-2 mt-1  rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                {...register("password", { required: true })}
+              />
+              {showPassword ? (
+                <BsEyeSlash
+                  className="mr-2 cursor-pointer text-xl"
+                  onClick={handleShowPassword}
+                  id="password"
+                />
+              ) : (
+                <BsEye
+                  className="mr-2 cursor-pointer text-xl"
+                  onClick={handleShowPassword}
+                  id="password"
+                />
+              )}
+            </div>
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">Password is required</p>
+            )}
           </div>
-          <div>
+          <div className="w-full ">
             <label
-              htmlFor="password"
+              htmlFor="confirmPassword"
               className="text-sm font-medium text-gray-700"
             >
               Confirm Password
             </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              {...register("confirmPassword", { required: true })}
-            />
+            <div className="w-full flex items-center border border-gray-300 rounded-md shadow-sm ">
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                autoComplete="current-password"
+                className="w-full px-3 py-2 mt-1  rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                {...register("confirmPassword", { required: true })}
+              />
+              {showConfirmPassword ? (
+                <BsEyeSlash
+                  className="mr-2 cursor-pointer text-xl"
+                  onClick={handleShowConfirmPassword}
+                  id="confirmPassword"
+                />
+              ) : (
+                <BsEye
+                  className="mr-2 cursor-pointer text-xl"
+                  onClick={handleShowConfirmPassword}
+                  id="confirmPassword"
+                />
+              )}
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">
+                Confirm Password is required
+              </p>
+            )}
           </div>
           <div>
             <button
@@ -90,15 +150,6 @@ const Register = () => {
               Sign up
             </button>
           </div>
-          {formState.errors && (
-            <div>
-              {Object.values(formState.errors).map((error, index) => (
-                <p key={index} className="text-red-500 text-sm">
-                  {error.message}
-                </p>
-              ))}
-            </div>
-          )}
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{" "}
@@ -110,6 +161,13 @@ const Register = () => {
           </Link>
         </p>
       </div>
+      {RegisterErrors.length > 0 && (
+        <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+          {RegisterErrors.map((error: string, i: number) => (
+            <p key={i}>{error}</p>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

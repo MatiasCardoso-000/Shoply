@@ -10,13 +10,13 @@ import { router as CartRouter } from "./routes/cart.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { Cart } from "./models/Cart.js";
+import { CartItems } from "./models/CartItems.js";
 
 
 const app = express();
 
 app.use("/api/webhook", WebHookRouter);
 
-app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -25,13 +25,14 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json());
+app.use(cookieParser())
 app.use("/api/auth", UserRouter);
 app.use("/api/products", ProductsRouter);
 app.use("/api/cart", CartRouter);
 app.use("/api/checkout", CheckOutRouter);
 
-User.belongsToMany(Product, { through: Cart, foreignKey: "userId" });
-Product.belongsToMany(User, { through: Cart, foreignKey: "productId" });
+User.belongsToMany(Product, { through: CartItems, foreignKey: "userId" });
+Product.belongsToMany(User, { through: CartItems, foreignKey: "productId" });
 
 export async function testConnection() {
   try {

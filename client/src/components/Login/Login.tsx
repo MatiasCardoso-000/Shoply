@@ -3,8 +3,8 @@ import type { User } from "../../types/user.types";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { BsEye } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const Login = () => {
   const {
@@ -14,6 +14,11 @@ const Login = () => {
   } = useForm<User>();
   const { signin, isAuthenticated, errors: LoginErrors } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const onSubmit = async (data: User) => {
     signin(data);
@@ -41,34 +46,48 @@ const Login = () => {
               id="email"
               type="email"
               autoComplete="email"
-              required
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               {...register("email", { required: true })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">Email is required</p>
+            )}
           </div>
-          <div className="w-full flex items-center shadow-sm ">
+          <div className="w-full ">
             <label
               htmlFor="password"
               className="text-sm font-medium text-gray-700"
             >
               Password
             </label>
-            <div className="w-full">
+            <div className="w-full flex items-center border border-gray-300 rounded-md shadow-sm ">
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                required
                 className="w-full px-3 py-2 mt-1  rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 {...register("password", { required: true })}
               />
+              {showPassword ? (
+                <BsEyeSlash
+                className="mr-2 cursor-pointer text-xl"
+                onClick={handleShowPassword}
+              />
+              ) : (
+                <BsEye
+                  className="mr-2 cursor-pointer text-xl"
+                  onClick={handleShowPassword}
+                />
+              )}
             </div>
-            <BsEye  />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">Password is required</p>
+            )}
           </div>
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
             >
               Sign in
             </button>

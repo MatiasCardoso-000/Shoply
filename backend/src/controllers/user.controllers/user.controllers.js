@@ -26,7 +26,7 @@ const register = async (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -66,14 +66,17 @@ const login = async (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
-    res.json({
-      accessToken: accessToken,
-    });
+    const userLogged = {
+      username: user.username,
+      email: user.email,
+    };
+
+    res.json({ userLogged, accessToken: accessToken });
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ message: ["Error en el servidor"] });
@@ -171,14 +174,18 @@ const refreshToken = async (req, res) => {
     }
 
     //verificar que la sesion se haya cerrado
-    const isRevoked = await RevokedTokensModel.findByPk(refreshToken);
+    // const isRevoked = await RevokedTokensModel.findByPk({
+    //   where: {
+    //     token : refreshToken
+    //   }
+    // });
 
     //Si el token esta revocado la sesion se cerro
-    if (isRevoked) {
-      return res.status(403).json({
-        message: "Token inválido o sesión cerrada.",
-      });
-    }
+    // if (isRevoked) {
+    //   return res.status(403).json({
+    //     message: "Token inválido o sesión cerrada.",
+    //   });
+    // }
     //Comprabamos que exista la clave secreta del refreshToken
     if (!process.env.REFRESH_TOKEN_SECRET) {
       throw new Error("Secret key not defined");
@@ -213,8 +220,10 @@ const refreshToken = async (req, res) => {
       }
     );
 
+    const userUpdated = { username: user.username, email: user.email };
+
     //Enviamos el nuevo accessToken al cliente
-    return res.json({ accesToken: newAccessToken });
+    return res.json({ userUpdated, accessToken: newAccessToken });
   } catch (error) {
     console.error("Error al refrescar el token:", error);
     return res

@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000/api";
+export const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}`;
 
 const refreshToken = async () => {
   try {
@@ -24,13 +24,13 @@ const refreshToken = async () => {
   }
 };
 
-export const apiFetch = async (url:string, options:RequestInit = {}) => {
+export const apiFetch = async (url: string, options: RequestInit = {}) => {
   const accessToken = localStorage.getItem("accessToken");
 
   //cabeceras por defecto
-  const headers: Record<string,string> = {
+  const headers: Record<string, string> = {
     "Content-type": "application/json",
-    ...options.headers as Record<string,string>,
+    ...(options.headers as Record<string, string>),
   };
 
   if (accessToken) {

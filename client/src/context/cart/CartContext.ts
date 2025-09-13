@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import type { Product } from '../../types/products.types';
 
 
-export interface CartItem extends Product {
+export interface CartItem extends Product{
   quantity: number;
 }
 

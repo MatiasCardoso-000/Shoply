@@ -1,21 +1,25 @@
-import type { CartItem } from "../../src/context/cart/CartContext";
-import { BASE_URL } from "../auth/api";
+import { apiFetch } from "../auth/api";
 
-export const addProductToCartRequest = async (cart: CartItem[]) => {
-  // console.log(...cart);
+export const addProductToCartRequest = async (id:number, quantity:number) => {
 
-  return await fetch(`${BASE_URL}/cart`, {
+
+  return await apiFetch(`/cart`, {
     method: "POST",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(cart),
+    body: JSON.stringify({id, quantity}),
+  });
+};
+
+export const updateCartRequest = async ({productId, quantity}) => {
+  return await apiFetch("/cart", {
+    method: "PUT",
+    credentials: "include",
+    body: JSON.stringify({ productId, quantity }),
   });
 };
 
 export const getCartRequest = async () => {
-  return await fetch(`${BASE_URL}/cart`, {
+  return await apiFetch(`/cart`, {
     method: "GET",
     credentials: "include",
   });

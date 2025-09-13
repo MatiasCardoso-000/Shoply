@@ -19,4 +19,4 @@ router.delete("/", UserControllers.deleteUser);
 
 router.get("/user/:id", UserControllers.getUser);
 
-router.post("/refresh-token", validateToken, UserControllers.refreshToken);
+router.post("/refresh-token",UserControllers.refreshToken);
