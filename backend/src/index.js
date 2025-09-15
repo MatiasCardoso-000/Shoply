@@ -9,9 +9,8 @@ import { router as ProductsRouter } from "./routes/products.routes.js";
 import { router as CartRouter } from "./routes/cart.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { Cart } from "./models/Cart.js";
 import { CartItems } from "./models/CartItems.js";
-
+import { Cart } from "./models/Cart.js";
 
 const app = express();
 
@@ -25,7 +24,7 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 app.use("/api/auth", UserRouter);
 app.use("/api/products", ProductsRouter);
 app.use("/api/cart", CartRouter);
@@ -33,6 +32,7 @@ app.use("/api/checkout", CheckOutRouter);
 
 User.belongsToMany(Product, { through: CartItems, foreignKey: "user_id" });
 Product.belongsToMany(User, { through: CartItems, foreignKey: "product_id" });
+CartItems.belongsTo(Cart, { foreignKey: "cart_id" });
 
 export async function testConnection() {
   try {
@@ -58,5 +58,5 @@ async function startServer() {
   }
 }
 
-testConnection()
-startServer()
+testConnection();
+startServer();

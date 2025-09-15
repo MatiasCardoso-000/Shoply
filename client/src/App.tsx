@@ -10,6 +10,7 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import { PrivateRoutes } from "./PrivateRoutes/PrivateRoutes";
 import ProductDescription from "./components/ProductDescription/ProductDescription";
+import { PublicRoutes } from "./components/PublicRoutes/PublicRoutes";
 
 function App() {
   return (
@@ -25,10 +26,13 @@ function App() {
               <Route path="/cart" element={<Cart />} />
             </Route>
 
-            <Route path="/" element={<ProductsList />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/product/:product_name" element={<ProductDescription />} />
+              <Route path="/" element={<ProductsList />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/product/:product_name"
+                element={<ProductDescription />}
+              />
           </Routes>
         </main>
         <Footer />

@@ -9,24 +9,25 @@ interface ProductsProviderProps {
 export const ProductsProvider: React.FC<ProductsProviderProps> = ({
   children,
 }) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  
 
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const getProducts = async (
+    maxPrice?: number,
+    category?: string
+  ): Promise<Product[]> => {
+    const productsData = await getProductsRequest(maxPrice, category);
 
-  const getProducts = async () => {
-    const productsData = await getProductsRequest();
     setProducts(productsData);
+    return productsData;
   };
 
-  useEffect(()=> {
-    getProducts()
-  },[])
-
-
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
-    <ProductsContext.Provider value={{ products,loading,error }}>
+    <ProductsContext.Provider value={{ products, getProducts }}>
       {children}
     </ProductsContext.Provider>
   );

@@ -1,11 +1,31 @@
 import { Product } from "../../models/Product.js";
+import { Op } from "sequelize";
 
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.findAll();
-    res.json(products);
+    const { maxPrice,category } = req.query;
+
+    let whereOptions = {};
+
+    if (maxPrice) {
+      whereOptions.price = {
+        [Op.lte]: parseFloat(maxPrice),
+      };
+    }
+
+    if (category) {
+      whereOptions.category = {
+        [Op.eq]: category,
+      };
+    } 
+
+    const products = await Product.findAll({
+      where: whereOptions,
+    });
+
+    return res.json(products);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

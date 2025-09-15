@@ -1,8 +1,17 @@
 import { apiFetch, BASE_URL } from "../auth/api";
 import { type Product } from "../../src/types/products.types";
 
-export const getProductsRequest = async (): Promise<Product[]> => {
-  const response = await fetch(`${BASE_URL}/products`, {
+export const getProductsRequest = async (maxPrice?: number,category?:string): Promise<Product[]> => {
+  let url = `${BASE_URL}/products`;
+  if (maxPrice && maxPrice > 0) {
+    url += `?maxPrice=${maxPrice}`;
+  }
+
+  if(category){
+    url += `${maxPrice ? '&' : '?'}category=${category}`;
+  }
+
+  const response = await fetch(url, {
     method: "GET",
     credentials: "include",
   });
@@ -10,7 +19,7 @@ export const getProductsRequest = async (): Promise<Product[]> => {
 };
 
 export const getProductRequest = async (id: string): Promise<Product> => {
-  const response = await apiFetch(`/products/${id}`);
+  const response = await fetch(`/products/${id}`);
   return response.json();
 };
 

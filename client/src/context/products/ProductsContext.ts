@@ -3,8 +3,7 @@ import type { Product } from '../../types/products.types';
 
 interface ProductsContextType {
   products: Product[];
-  loading: boolean;
-  error: string | null;
+  getProducts : (maxPrice?:number,category?:string) => Promise<Product[]>;
 }
 
 export const ProductsContext = createContext<ProductsContextType | undefined>(undefined);

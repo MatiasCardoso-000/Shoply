@@ -22,6 +22,10 @@ export const Product = sequelize.define("product", {
   description: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  category: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 });
 
